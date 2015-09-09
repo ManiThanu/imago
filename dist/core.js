@@ -1015,6 +1015,7 @@ var imagoPage;
 imagoPage = (function() {
   function imagoPage($location, $state, imagoModel) {
     var ref, ref1;
+    this.$rootScope.fetchingData = true;
     if ((ref = $state.current.data) != null ? ref.path : void 0) {
       this.path = {
         path: $state.current.data.path
@@ -1034,6 +1035,7 @@ imagoPage = (function() {
     imagoModel.getData(this.path).then((function(_this) {
       return function(response) {
         var data, i, len, results;
+        _this.$rootScope.fetchingData = false;
         results = [];
         for (i = 0, len = response.length; i < len; i++) {
           data = response[i];

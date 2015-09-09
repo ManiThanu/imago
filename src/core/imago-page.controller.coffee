@@ -2,6 +2,8 @@ class imagoPage extends Controller
 
   constructor: ($location, $state, imagoModel) ->
 
+    @$rootScope.fetchingData = true
+
     if $state.current.data?.path
       @path = {path: $state.current.data.path}
     else if $location.path() is '/'
@@ -13,6 +15,7 @@ class imagoPage extends Controller
       @path.recursive = true
 
     imagoModel.getData(@path).then (response) =>
+      @$rootScope.fetchingData = false
       for data in response
         @data = data
         break
