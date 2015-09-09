@@ -1,7 +1,8 @@
 .cart
   .icon(
-    ng-click="cart.imagoCart.show = !cart.imagoCart.show"
     ng-class="{'message': cart.imagoCart.newmessages}"
+    ng-mouseenter="cart.imagoCart.show = true"
+    ng-click="cart.imagoCart.show = !cart.imagoCart.show"
     )
     .counter(ng-bind="cart.imagoCart.itemsLength")
 
