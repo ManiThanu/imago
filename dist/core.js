@@ -1013,8 +1013,9 @@ angular.module('imago').service('imagoModel', ['$rootScope', '$http', '$location
 var imagoPage;
 
 imagoPage = (function() {
-  function imagoPage($location, $state, imagoModel) {
+  function imagoPage($rootScope, $location, $state, imagoModel) {
     var ref, ref1;
+    $rootScope.fetchingData = true;
     if ((ref = $state.current.data) != null ? ref.path : void 0) {
       this.path = {
         path: $state.current.data.path
@@ -1034,6 +1035,7 @@ imagoPage = (function() {
     imagoModel.getData(this.path).then((function(_this) {
       return function(response) {
         var data, i, len, results;
+        $rootScope.fetchingData = false;
         results = [];
         for (i = 0, len = response.length; i < len; i++) {
           data = response[i];
@@ -1049,7 +1051,7 @@ imagoPage = (function() {
 
 })();
 
-angular.module('imago').controller('imagoPage', ['$location', '$state', 'imagoModel', imagoPage]);
+angular.module('imago').controller('imagoPage', ['$rootScope', '$location', '$state', 'imagoModel', imagoPage]);
 
 var imagoUtils;
 
