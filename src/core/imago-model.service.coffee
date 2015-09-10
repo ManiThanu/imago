@@ -599,7 +599,6 @@ class imagoModel extends Service
     @update assets, {save: true}
 
   isDuplicated: (asset, assets, options={}) =>
-    console.log 'asset', asset, assets, options
     options.rename = false if _.isUndefined options.rename
 
     defer = @$q.defer()

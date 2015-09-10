@@ -909,7 +909,6 @@ imagoModel = (function() {
     if (options == null) {
       options = {};
     }
-    console.log('asset', asset, assets, options);
     if (_.isUndefined(options.rename)) {
       options.rename = false;
     }
