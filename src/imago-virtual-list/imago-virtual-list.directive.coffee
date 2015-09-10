@@ -51,6 +51,7 @@ class ImagoVirtualList extends Directive
             self.margin = Math.round((self.width / self.itemsPerRow) - self.rowWidth)
             self.margin = self.margin / 2 if self.itemsPerRow is 1
             self.updateDisplayList()
+          , 100
 
         self.updateDisplayList = ->
           firstCell = Math.max(Math.round(self.scrollTop / self.rowHeight) - (Math.round(self.height / self.rowHeight)), 0)

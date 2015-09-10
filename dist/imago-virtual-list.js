@@ -55,7 +55,7 @@ ImagoVirtualList = (function() {
               self.margin = self.margin / 2;
             }
             return self.updateDisplayList();
-          });
+          }, 100);
         };
         self.updateDisplayList = function() {
           var cellsToCreate, chunks, data, findIndex, firstCell, i, idx, l, results;
