@@ -599,6 +599,7 @@ class imagoModel extends Service
     @update assets, {save: true}
 
   isDuplicated: (asset, assets, options={}) =>
+    console.log 'asset', asset, assets, options
     options.rename = false if _.isUndefined options.rename
 
     defer = @$q.defer()
@@ -624,7 +625,7 @@ class imagoModel extends Service
           name = "#{original_name}_#{i}"
           i++
           findName = _.find assets, (chr) =>
-            return name is _.kebabCase(chr.name)
+            return _.kebabCase(name) is _.kebabCase(chr.name)
           exists = (if findName then true else false)
 
         defer.resolve name

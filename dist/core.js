@@ -909,6 +909,7 @@ imagoModel = (function() {
     if (options == null) {
       options = {};
     }
+    console.log('asset', asset, assets, options);
     if (_.isUndefined(options.rename)) {
       options.rename = false;
     }
@@ -939,7 +940,7 @@ imagoModel = (function() {
           i++;
           findName = _.find(assets, (function(_this) {
             return function(chr) {
-              return name === _.kebabCase(chr.name);
+              return _.kebabCase(name) === _.kebabCase(chr.name);
             };
           })(this));
           exists = (findName ? true : false);
