@@ -1091,6 +1091,7 @@ imagoUtils = (function() {
         EUR: '&euro;',
         USD: '$',
         SEK: 'SEK',
+        CHF: 'CHF',
         YEN: '&yen;',
         GBP: '&pound;',
         GENERIC: '&curren;'
@@ -1121,7 +1122,7 @@ imagoUtils = (function() {
         "Belarus": "BYR",
         "Belize": "BZD",
         "Canada": "CAD",
-        "Switzerland Franc": "CHF",
+        "Switzerland": "CHF",
         "Chile": "CLP",
         "China": "CNY",
         "Colombia": "COP",
