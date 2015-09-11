@@ -583,7 +583,7 @@ Calculation = (function() {
   };
 
   Calculation.prototype.submit = function() {
-    var ref;
+    var ref, ref1;
     this.process.form.items = angular.copy(this.cart.items);
     this.process.form.costs = angular.copy(this.costs);
     this.process.form.currency = angular.copy(this.currency);
@@ -597,6 +597,9 @@ Calculation = (function() {
     this.process.form.billing_address['phone'] = angular.copy(this.process.form.phone);
     this.process.form.shipping_address['phone'] = angular.copy(this.process.form.phone);
     this.process.form.fulfillmentcenter = angular.copy((ref = this.fcenter) != null ? ref._id : void 0);
+    this.process.form.userData = {
+      'browser': (ref1 = window.navigator) != null ? ref1.userAgent : void 0
+    };
     return this.$http.post(this.imagoSettings.host + '/api/checkout', this.process.form);
   };
 

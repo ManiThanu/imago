@@ -355,6 +355,7 @@ class Calculation extends Service
     @process.form.shipping_address['phone'] = angular.copy @process.form.phone
 
     @process.form.fulfillmentcenter = angular.copy @fcenter?._id
+    @process.form.userData = {'browser': window.navigator?.userAgent}
 
     return @$http.post(@imagoSettings.host + '/api/checkout', @process.form)
 
