@@ -20,7 +20,7 @@ ImagoVirtualList = (function() {
         });
         self = {};
         self.scrollTop = 0;
-        self.scrollBottomTrigger = 500;
+        self.scrollBottomTrigger = $window.innerHeight;
         scope.init = function() {
           if (!scope.imagovirtuallist.data) {
             return;
@@ -111,7 +111,7 @@ ImagoVirtualList = (function() {
         };
         scope.onScrollWindow = function() {
           self.scrollTop = $window.pageYOffset;
-          if ((self.canvasHeight - self.scrollTop) <= self.triggerHeight) {
+          if ((self.canvasHeight - self.scrollTop) <= $window.innerHeight) {
             scope.imagovirtuallist.onBottom();
           }
           self.updateDisplayList();
