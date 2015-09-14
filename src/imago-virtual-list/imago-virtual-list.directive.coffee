@@ -1,6 +1,6 @@
 class ImagoVirtualList extends Directive
 
-  constructor: ($window, $rootScope, $timeout) ->
+  constructor: ($window, $document, $rootScope, $timeout) ->
 
     return {
 
@@ -12,6 +12,7 @@ class ImagoVirtualList extends Directive
       bindToController:
         data: '='
         onBottom: '&'
+        scroll: '='
 
       link: (scope, element, attrs, ctrl, transclude) ->
 
@@ -48,10 +49,8 @@ class ImagoVirtualList extends Directive
             cellsPerHeight = Math.round(self.height / self.rowHeight)
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow
             self.numberOfCells = 3 * self.cellsPerPage
-            self.margin = Math.round((self.width / self.itemsPerRow) - self.rowWidth)
-            self.margin = self.margin / 2 if self.itemsPerRow is 1
             self.updateDisplayList()
-          , 100
+          , 200
 
         self.updateDisplayList = ->
           firstCell = Math.max(Math.round(self.scrollTop / self.rowHeight) - (Math.round(self.height / self.rowHeight)), 0)
@@ -73,9 +72,17 @@ class ImagoVirtualList extends Directive
 
             idx = findIndex()
 
-            # scope.visibleProvider[i].styles = 'transform': "translate3d(#{(self.rowWidth * idx.inside) + self.margin + 'px'}, #{(firstCell + idx.chunk) * self.rowHeight + 'px'}, 0)"
-            scope.visibleProvider[i].styles = 'transform': "translate(#{(self.rowWidth * idx.inside) + self.margin + 'px'}, #{(firstCell + idx.chunk) * self.rowHeight + 'px'})"
+            # scope.visibleProvider[i].styles = 'transform': "translate3d(#{(self.rowWidth * idx.inside) + 'px'}, #{(firstCell + idx.chunk) * self.rowHeight + 'px'}, 0)"
+            scope.visibleProvider[i].styles = 'transform': "translate(#{(self.rowWidth * idx.inside) + 'px'}, #{(firstCell + idx.chunk) * self.rowHeight + 'px'})"
             i++
+          scope.scroll() if scope.imagovirtuallist.scroll
+
+        scope.scroll = ->
+          return unless scope.imagovirtuallist.scroll
+          $timeout ->
+            self.scrollTop = angular.copy scope.imagovirtuallist.scroll
+            scope.imagovirtuallist.scroll = 0
+            $document.scrollTop(self.scrollTop, 0)
 
         scope.onScrollContainer = ->
           self.scrollTop = element.prop('scrollTop')
