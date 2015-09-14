@@ -25,6 +25,11 @@ ImagoVirtualList = (function() {
           if (!scope.imagovirtuallist.data) {
             return;
           }
+          if (attrs.imagoVirtualListContainer) {
+            element[0].addEventListener('scroll', scope.onScrollContainer);
+          } else {
+            angular.element($window).on('scroll', scope.onScrollWindow);
+          }
           scope.resetSize();
           return $timeout(function() {
             var cellsPerHeight, testDiv;
@@ -37,22 +42,20 @@ ImagoVirtualList = (function() {
             angular.element(element[0].querySelector('#virtual-list-test-div')).remove();
             self.width = element[0].clientWidth;
             self.height = element[0].clientHeight;
-            if (attrs.imagoVirtualListContainer) {
-              element[0].addEventListener('scroll', scope.onScrollContainer);
-            } else {
-              angular.element($window).on('scroll', scope.onScrollWindow);
-            }
             self.triggerHeight = self.rowHeight + self.scrollBottomTrigger;
             self.itemsPerRow = Math.floor(self.width / self.rowWidth);
-            self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * self.rowHeight;
-            scope.canvasStyle = {
-              height: self.canvasHeight + 'px'
-            };
             cellsPerHeight = Math.round(self.height / self.rowHeight);
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
             self.numberOfCells = 3 * self.cellsPerPage;
-            return self.updateDisplayList();
+            return self.updateData();
           }, 200);
+        };
+        self.updateData = function() {
+          self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * self.rowHeight;
+          scope.canvasStyle = {
+            height: self.canvasHeight + 'px'
+          };
+          return self.updateDisplayList();
         };
         self.updateDisplayList = function() {
           var cellsToCreate, chunks, data, findIndex, firstCell, i, idx, l;
@@ -122,8 +125,9 @@ ImagoVirtualList = (function() {
           self.width = 0;
           return self.height = 0;
         };
+        scope.init();
         scope.$watch('imagovirtuallist.data', function() {
-          return scope.init();
+          return self.updateData();
         });
         watchers = [];
         watchers.push($rootScope.$on('imagovirtuallist:init', function() {

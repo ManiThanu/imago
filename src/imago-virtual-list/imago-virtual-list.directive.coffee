@@ -25,6 +25,10 @@ class ImagoVirtualList extends Directive
 
         scope.init = ->
           return unless scope.imagovirtuallist.data
+          if attrs.imagoVirtualListContainer
+            element[0].addEventListener 'scroll', scope.onScrollContainer
+          else
+            angular.element($window).on 'scroll', scope.onScrollWindow
           scope.resetSize()
           $timeout ->
             testDiv = document.createElement 'div'
@@ -38,19 +42,18 @@ class ImagoVirtualList extends Directive
             self.width = element[0].clientWidth
             self.height = element[0].clientHeight
 
-            if attrs.imagoVirtualListContainer
-              element[0].addEventListener 'scroll', scope.onScrollContainer
-            else
-              angular.element($window).on 'scroll', scope.onScrollWindow
             self.triggerHeight = self.rowHeight + self.scrollBottomTrigger
             self.itemsPerRow = Math.floor(self.width / self.rowWidth)
-            self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * self.rowHeight
-            scope.canvasStyle = height: self.canvasHeight + 'px'
             cellsPerHeight = Math.round(self.height / self.rowHeight)
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow
             self.numberOfCells = 3 * self.cellsPerPage
-            self.updateDisplayList()
+            self.updateData()
           , 200
+
+        self.updateData = ->
+          self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * self.rowHeight
+          scope.canvasStyle = height: self.canvasHeight + 'px'
+          self.updateDisplayList()
 
         self.updateDisplayList = ->
           firstCell = Math.max(Math.round(self.scrollTop / self.rowHeight) - (Math.round(self.height / self.rowHeight)), 0)
@@ -104,8 +107,10 @@ class ImagoVirtualList extends Directive
           self.width            = 0
           self.height           = 0
 
+        scope.init()
+
         scope.$watch 'imagovirtuallist.data', ->
-          scope.init()
+          self.updateData()
 
         watchers = []
 
