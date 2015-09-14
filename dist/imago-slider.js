@@ -40,7 +40,22 @@ imagoSlider = (function() {
             return scope.prefetch('initial');
           });
         }
-        scope.imagoslider.conf.siblings = !!(scope.imagoslider.conf.next && scope.imagoslider.conf.prev);
+        scope.setSiblings = function() {
+          return scope.imagoslider.conf.siblings = !!(scope.imagoslider.conf.next && scope.imagoslider.conf.prev);
+        };
+        scope.setSiblings();
+        if (angular.isDefined(attrs.prev)) {
+          attrs.$observe('prev', function() {
+            scope.imagoslider.conf.prev = attrs.prev;
+            return scope.setSiblings();
+          });
+        }
+        if (angular.isDefined(attrs.next)) {
+          attrs.$observe('next', function() {
+            scope.imagoslider.conf.next = attrs.next;
+            return scope.setSiblings();
+          });
+        }
         if ($location.path().indexOf('last')) {
           scope.currentIndex = parseInt(scope.imagoslider.conf.current);
         } else {

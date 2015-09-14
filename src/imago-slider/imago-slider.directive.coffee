@@ -35,7 +35,20 @@ class imagoSlider extends Directive
             scope.imagoslider.length = data.length
             scope.prefetch('initial')
 
-        scope.imagoslider.conf.siblings = !!(scope.imagoslider.conf.next and scope.imagoslider.conf.prev)
+        scope.setSiblings = ->
+          scope.imagoslider.conf.siblings = !!(scope.imagoslider.conf.next and scope.imagoslider.conf.prev)
+
+        scope.setSiblings()
+
+        if angular.isDefined attrs.prev
+          attrs.$observe 'prev', ->
+            scope.imagoslider.conf.prev = attrs.prev
+            scope.setSiblings()
+
+        if angular.isDefined attrs.next
+          attrs.$observe 'next', ->
+            scope.imagoslider.conf.next = attrs.next
+            scope.setSiblings()
 
         if $location.path().indexOf('last')
           scope.currentIndex = parseInt(scope.imagoslider.conf.current)
