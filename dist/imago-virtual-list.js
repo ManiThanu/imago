@@ -20,7 +20,6 @@ ImagoVirtualList = (function() {
         });
         self = {};
         self.scrollTop = 0;
-        self.scrollBottomTrigger = $window.innerHeight;
         scope.init = function() {
           if (!scope.imagovirtuallist.data) {
             return;
@@ -42,7 +41,6 @@ ImagoVirtualList = (function() {
             angular.element(element[0].querySelector('#virtual-list-test-div')).remove();
             self.width = element[0].clientWidth;
             self.height = element[0].clientHeight;
-            self.triggerHeight = self.rowHeight + self.scrollBottomTrigger;
             self.itemsPerRow = Math.floor(self.width / self.rowWidth);
             cellsPerHeight = Math.round(self.height / self.rowHeight);
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
@@ -110,7 +108,7 @@ ImagoVirtualList = (function() {
           return scope.$digest();
         };
         scope.onScrollWindow = function() {
-          self.scrollTop = $window.pageYOffset;
+          self.scrollTop = $window.scrollY;
           if ((self.canvasHeight - self.scrollTop) <= $window.innerHeight) {
             scope.imagovirtuallist.onBottom();
           }

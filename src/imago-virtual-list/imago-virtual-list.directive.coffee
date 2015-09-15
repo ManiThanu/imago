@@ -21,7 +21,6 @@ class ImagoVirtualList extends Directive
 
         self = {}
         self.scrollTop = 0
-        self.scrollBottomTrigger = $window.innerHeight
 
         scope.init = ->
           return unless scope.imagovirtuallist.data
@@ -42,7 +41,6 @@ class ImagoVirtualList extends Directive
             self.width = element[0].clientWidth
             self.height = element[0].clientHeight
 
-            self.triggerHeight = self.rowHeight + self.scrollBottomTrigger
             self.itemsPerRow = Math.floor(self.width / self.rowWidth)
             cellsPerHeight = Math.round(self.height / self.rowHeight)
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow
@@ -93,7 +91,7 @@ class ImagoVirtualList extends Directive
           scope.$digest()
 
         scope.onScrollWindow = ->
-          self.scrollTop = $window.pageYOffset
+          self.scrollTop = $window.scrollY
           if (self.canvasHeight - self.scrollTop) <= $window.innerHeight
             scope.imagovirtuallist.onBottom()
           self.updateDisplayList()
