@@ -24,6 +24,8 @@ class ImagoVirtualList extends Directive
         self.scrollTop = 0
 
         scope.init = ->
+          return if @calculating
+          @calculating = true
           return unless scope.imagovirtuallist.data
           if attrs.imagoVirtualListContainer
             element[0].addEventListener 'scroll', scope.onScrollContainer
@@ -34,11 +36,11 @@ class ImagoVirtualList extends Directive
           $timeout ->
             testDiv = document.createElement 'div'
             testDiv.className = attrs.classItem
-            testDiv.id = 'virtual-list-test-div'
+            testDiv.id = 'master-item'
             element.append testDiv
             self.rowWidth = testDiv.clientWidth
             self.rowHeight = testDiv.clientHeight
-            angular.element(element[0].querySelector('#virtual-list-test-div')).remove()
+            angular.element(element[0].querySelector('#master-item')).remove()
 
             self.width = element[0].clientWidth
             self.height = element[0].clientHeight
@@ -48,6 +50,7 @@ class ImagoVirtualList extends Directive
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow
             self.numberOfCells = 3 * self.cellsPerPage
             self.updateData()
+            @calculating = false
           , 300
 
         self.updateData = ->

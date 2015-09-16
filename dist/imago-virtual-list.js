@@ -22,6 +22,10 @@ ImagoVirtualList = (function() {
         self = {};
         self.scrollTop = 0;
         scope.init = function() {
+          if (this.calculating) {
+            return;
+          }
+          this.calculating = true;
           if (!scope.imagovirtuallist.data) {
             return;
           }
@@ -38,18 +42,19 @@ ImagoVirtualList = (function() {
             var cellsPerHeight, testDiv;
             testDiv = document.createElement('div');
             testDiv.className = attrs.classItem;
-            testDiv.id = 'virtual-list-test-div';
+            testDiv.id = 'master-item';
             element.append(testDiv);
             self.rowWidth = testDiv.clientWidth;
             self.rowHeight = testDiv.clientHeight;
-            angular.element(element[0].querySelector('#virtual-list-test-div')).remove();
+            angular.element(element[0].querySelector('#master-item')).remove();
             self.width = element[0].clientWidth;
             self.height = element[0].clientHeight;
             self.itemsPerRow = Math.floor(self.width / self.rowWidth);
             cellsPerHeight = Math.round(self.height / self.rowHeight);
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
             self.numberOfCells = 3 * self.cellsPerPage;
-            return self.updateData();
+            self.updateData();
+            return this.calculating = false;
           }, 300);
         };
         self.updateData = function() {
