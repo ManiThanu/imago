@@ -13,6 +13,7 @@ class ImagoVirtualList extends Directive
         data: '='
         onBottom: '&'
         scroll: '='
+        offsetBottom: '@'
 
       link: (scope, element, attrs, ctrl, transclude) ->
 
@@ -28,6 +29,7 @@ class ImagoVirtualList extends Directive
             element[0].addEventListener 'scroll', scope.onScrollContainer
           else
             angular.element($window).on 'scroll', scope.onScrollWindow
+          scope.imagovirtuallist.offsetBottom = $window.innerHeight unless scope.imagovirtuallist.offsetBottom
           scope.resetSize()
           $timeout ->
             testDiv = document.createElement 'div'
@@ -92,7 +94,7 @@ class ImagoVirtualList extends Directive
 
         scope.onScrollWindow = ->
           self.scrollTop = $window.scrollY
-          if (self.canvasHeight - self.scrollTop) <= $window.innerHeight
+          if (self.canvasHeight - self.scrollTop) <= Number(scope.imagovirtuallist.offsetBottom)
             scope.imagovirtuallist.onBottom()
           self.updateDisplayList()
           scope.$digest()

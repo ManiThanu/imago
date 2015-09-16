@@ -11,7 +11,8 @@ ImagoVirtualList = (function() {
       bindToController: {
         data: '=',
         onBottom: '&',
-        scroll: '='
+        scroll: '=',
+        offsetBottom: '@'
       },
       link: function(scope, element, attrs, ctrl, transclude) {
         var self, watchers;
@@ -28,6 +29,9 @@ ImagoVirtualList = (function() {
             element[0].addEventListener('scroll', scope.onScrollContainer);
           } else {
             angular.element($window).on('scroll', scope.onScrollWindow);
+          }
+          if (!scope.imagovirtuallist.offsetBottom) {
+            scope.imagovirtuallist.offsetBottom = $window.innerHeight;
           }
           scope.resetSize();
           return $timeout(function() {
@@ -109,7 +113,7 @@ ImagoVirtualList = (function() {
         };
         scope.onScrollWindow = function() {
           self.scrollTop = $window.scrollY;
-          if ((self.canvasHeight - self.scrollTop) <= $window.innerHeight) {
+          if ((self.canvasHeight - self.scrollTop) <= Number(scope.imagovirtuallist.offsetBottom)) {
             scope.imagovirtuallist.onBottom();
           }
           self.updateDisplayList();
