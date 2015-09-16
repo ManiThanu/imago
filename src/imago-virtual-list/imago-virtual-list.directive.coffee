@@ -48,7 +48,7 @@ class ImagoVirtualList extends Directive
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow
             self.numberOfCells = 3 * self.cellsPerPage
             self.updateData()
-          , 200
+          , 300
 
         self.updateData = ->
           self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * self.rowHeight

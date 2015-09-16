@@ -50,7 +50,7 @@ ImagoVirtualList = (function() {
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
             self.numberOfCells = 3 * self.cellsPerPage;
             return self.updateData();
-          }, 200);
+          }, 300);
         };
         self.updateData = function() {
           self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * self.rowHeight;
