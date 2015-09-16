@@ -511,7 +511,7 @@ Calculation = (function() {
   };
 
   Calculation.prototype.checkStock = function(cb) {
-    var changed, i, item, len, ref, ref1, ref2, ref3, ref4, stock;
+    var changed, i, item, len, ref, ref1, ref2, ref3, ref4, ref5, ref6, stock;
     this.cartError = {};
     this.fcenter = _.find(this.fulfillmentcenters, (function(_this) {
       return function(ffc) {
@@ -532,7 +532,7 @@ Calculation = (function() {
     for (i = 0, len = ref.length; i < len; i++) {
       item = ref[i];
       stock = !_.isUndefined((ref1 = item.fields.stock) != null ? (ref2 = ref1.value) != null ? ref2[this.fcenter._id] : void 0 : void 0) ? (ref3 = item.fields.stock) != null ? (ref4 = ref3.value) != null ? ref4[this.fcenter._id] : void 0 : void 0 : 100000;
-      if (parseInt(stock) < item.qty) {
+      if (parseInt(stock) < item.qty && !((ref5 = item.fields) != null ? (ref6 = ref5.presale) != null ? ref6.value : void 0 : void 0)) {
         item.qty = stock;
         changed = true;
         if (stock !== 0) {

@@ -308,7 +308,7 @@ class Calculation extends Service
     for item in @cart.items
       # stock = item.fields.stock?.value?[@fcenter._id] or 100000
       stock = if !_.isUndefined(item.fields.stock?.value?[@fcenter._id]) then item.fields.stock?.value?[@fcenter._id] else 100000
-      if parseInt(stock) < item.qty
+      if parseInt(stock) < item.qty and not item.fields?.presale?.value
         item.qty = stock
         changed = true
 
