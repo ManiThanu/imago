@@ -140,7 +140,7 @@ ImagoVirtualList = (function() {
         }));
         return scope.$on('$destroy', function() {
           var j, len, results, watcher;
-          angular.element($window).off('scroll', scope.onScrollWindow);
+          angular.element($window).off('scroll');
           results = [];
           for (j = 0, len = watchers.length; j < len; j++) {
             watcher = watchers[j];

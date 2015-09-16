@@ -121,7 +121,7 @@ class ImagoVirtualList extends Directive
           scope.init()
 
         scope.$on '$destroy', ->
-          angular.element($window).off 'scroll', scope.onScrollWindow
+          angular.element($window).off 'scroll'
           for watcher in watchers
             watcher()
 
