@@ -1,25 +1,18 @@
 class ImagoClick extends Directive
 
-  constructor: ($parse, imagoUtils) ->
+  constructor: ($parse) ->
 
     return {
 
       link: (scope, element, attrs) ->
+        clickHandler = if angular.isFunction(attrs.imagoClick) then clickExpr else $parse(attrs.imagoClick)
 
-        fn = $parse(attrs.imagoClick)
-        mobile = imagoUtils.isMobile()
+        element.on 'click', (evt) ->
+          callback = ->
+            clickHandler(scope, {$event: evt})
 
-        callback = (evt) ->
-          run = ->
-            fn(scope, {$event: evt})
+          scope.$apply(callback)
 
-          scope.$apply(run)
-
-        if mobile
-          element.on 'touchstart', (evt) ->
-            callback(evt)
-        else
-          element.on 'click', (evt) ->
-            callback(evt)
+        element.onclick = angular.noop
 
     }

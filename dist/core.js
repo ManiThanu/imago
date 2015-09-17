@@ -18,30 +18,21 @@ angular.module('lodash', []).factory('_', function() {
 var ImagoClick;
 
 ImagoClick = (function() {
-  function ImagoClick($parse, imagoUtils) {
+  function ImagoClick($parse) {
     return {
       link: function(scope, element, attrs) {
-        var callback, fn, mobile;
-        fn = $parse(attrs.imagoClick);
-        mobile = imagoUtils.isMobile();
-        callback = function(evt) {
-          var run;
-          run = function() {
-            return fn(scope, {
+        var clickHandler;
+        clickHandler = angular.isFunction(attrs.imagoClick) ? clickExpr : $parse(attrs.imagoClick);
+        element.on('click', function(evt) {
+          var callback;
+          callback = function() {
+            return clickHandler(scope, {
               $event: evt
             });
           };
-          return scope.$apply(run);
-        };
-        if (mobile) {
-          return element.on('touchstart', function(evt) {
-            return callback(evt);
-          });
-        } else {
-          return element.on('click', function(evt) {
-            return callback(evt);
-          });
-        }
+          return scope.$apply(callback);
+        });
+        return element.onclick = angular.noop;
       }
     };
   }
@@ -50,7 +41,7 @@ ImagoClick = (function() {
 
 })();
 
-angular.module('imago').directive('imagoClick', ['$parse', 'imagoUtils', ImagoClick]);
+angular.module('imago').directive('imagoClick', ['$parse', ImagoClick]);
 
 var imagoModel,
   bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
