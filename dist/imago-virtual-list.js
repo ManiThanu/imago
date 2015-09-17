@@ -38,24 +38,26 @@ ImagoVirtualList = (function() {
             scope.imagovirtuallist.offsetBottom = $window.innerHeight;
           }
           scope.resetSize();
-          return $timeout(function() {
-            var cellsPerHeight, testDiv;
-            testDiv = document.createElement('div');
-            testDiv.className = attrs.classItem;
-            testDiv.id = 'master-item';
-            element.append(testDiv);
-            self.rowWidth = testDiv.clientWidth;
-            self.rowHeight = testDiv.clientHeight;
-            angular.element(element[0].querySelector('#master-item')).remove();
-            self.width = element[0].clientWidth;
-            self.height = element[0].clientHeight;
-            self.itemsPerRow = Math.floor(self.width / self.rowWidth);
-            cellsPerHeight = Math.round(self.height / self.rowHeight);
-            self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
-            self.numberOfCells = 3 * self.cellsPerPage;
-            self.updateData();
-            return this.calculating = false;
-          }, 300);
+          return $timeout((function(_this) {
+            return function() {
+              var cellsPerHeight, testDiv;
+              testDiv = document.createElement('div');
+              testDiv.className = attrs.classItem;
+              testDiv.id = 'master-item';
+              element.append(testDiv);
+              self.rowWidth = testDiv.clientWidth;
+              self.rowHeight = testDiv.clientHeight;
+              angular.element(element[0].querySelector('#master-item')).remove();
+              self.width = element[0].clientWidth;
+              self.height = element[0].clientHeight;
+              self.itemsPerRow = Math.floor(self.width / self.rowWidth);
+              cellsPerHeight = Math.round(self.height / self.rowHeight);
+              self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
+              self.numberOfCells = 3 * self.cellsPerPage;
+              self.updateData();
+              return _this.calculating = false;
+            };
+          })(this), 300);
         };
         self.updateData = function() {
           self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * self.rowHeight;

@@ -33,7 +33,7 @@ class ImagoVirtualList extends Directive
             angular.element($window).on 'scroll', scope.onScrollWindow
           scope.imagovirtuallist.offsetBottom = $window.innerHeight unless scope.imagovirtuallist.offsetBottom
           scope.resetSize()
-          $timeout ->
+          $timeout =>
             testDiv = document.createElement 'div'
             testDiv.className = attrs.classItem
             testDiv.id = 'master-item'
