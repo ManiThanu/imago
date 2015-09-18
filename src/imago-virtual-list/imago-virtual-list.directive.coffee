@@ -29,6 +29,7 @@ class ImagoVirtualList extends Directive
         masterDiv.id = 'master-item'
         masterDiv.className = attrs.classItem
         masterDiv.style.opacity = 0
+        masterDiv.style.zIndex = -1
         element.append masterDiv
 
         scope.init = ->
@@ -47,14 +48,14 @@ class ImagoVirtualList extends Directive
             cellsPerHeight = Math.round(self.height / masterDiv.clientHeight)
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow
             self.numberOfCells = 3 * self.cellsPerPage
-            self.margin = (element[0].clientWidth - (self.itemsPerRow * masterDiv.clientWidth)) / 2
+            self.canvasWidth = self.itemsPerRow * masterDiv.clientWidth
             self.updateData()
             @calculating = false
-          , 300
+          , 200
 
         self.updateData = ->
           self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * masterDiv.clientHeight
-          scope.canvasStyle = height: self.canvasHeight + 'px', 'margin': "0 #{self.margin}px"
+          scope.canvasStyle = height: "#{self.canvasHeight}px", width: "#{self.canvasWidth}px"
           self.updateDisplayList()
 
         self.updateDisplayList = ->
@@ -76,8 +77,6 @@ class ImagoVirtualList extends Directive
                   return idx
 
             idx = findIndex()
-
-            # scope.visibleProvider[i].styles = 'transform': "translate3d(#{(masterDiv.clientWidth * idx.inside) + 'px'}, #{(firstCell + idx.chunk) * masterDiv.clientHeight + 'px'}, 0)"
             scope.visibleProvider[i].styles = 'transform': "translate(#{(masterDiv.clientWidth * idx.inside) + 'px'}, #{(firstCell + idx.chunk) * masterDiv.clientHeight + 'px'})"
             i++
           scope.scroll() if scope.imagovirtuallist.scroll
@@ -116,10 +115,6 @@ class ImagoVirtualList extends Directive
         angular.element($window).on 'resize', =>
           if Math.floor(element[0].clientWidth / masterDiv.clientWidth) isnt self.itemsPerRow
             scope.init()
-          else
-            self.margin = (element[0].clientWidth - (self.itemsPerRow * masterDiv.clientWidth)) / 2
-            scope.canvasStyle.margin = "0 #{self.margin}px"
-            scope.$digest()
 
         watchers = []
 

@@ -28,6 +28,7 @@ ImagoVirtualList = (function() {
         masterDiv.id = 'master-item';
         masterDiv.className = attrs.classItem;
         masterDiv.style.opacity = 0;
+        masterDiv.style.zIndex = -1;
         element.append(masterDiv);
         scope.init = function() {
           if (!scope.imagovirtuallist.data) {
@@ -51,17 +52,17 @@ ImagoVirtualList = (function() {
               cellsPerHeight = Math.round(self.height / masterDiv.clientHeight);
               self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
               self.numberOfCells = 3 * self.cellsPerPage;
-              self.margin = (element[0].clientWidth - (self.itemsPerRow * masterDiv.clientWidth)) / 2;
+              self.canvasWidth = self.itemsPerRow * masterDiv.clientWidth;
               self.updateData();
               return _this.calculating = false;
             };
-          })(this), 300);
+          })(this), 200);
         };
         self.updateData = function() {
           self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * masterDiv.clientHeight;
           scope.canvasStyle = {
-            height: self.canvasHeight + 'px',
-            'margin': "0 " + self.margin + "px"
+            height: self.canvasHeight + "px",
+            width: self.canvasWidth + "px"
           };
           return self.updateDisplayList();
         };
@@ -140,10 +141,6 @@ ImagoVirtualList = (function() {
           return function() {
             if (Math.floor(element[0].clientWidth / masterDiv.clientWidth) !== self.itemsPerRow) {
               return scope.init();
-            } else {
-              self.margin = (element[0].clientWidth - (self.itemsPerRow * masterDiv.clientWidth)) / 2;
-              scope.canvasStyle.margin = "0 " + self.margin + "px";
-              return scope.$digest();
             }
           };
         })(this));
