@@ -193,7 +193,7 @@ class Calculation extends Service
         with_shippingcost.push(item)
       else if item.fields.calculateShippingCosts?.value
         if rate.type is 'weight'
-          count += (item.weight or 1) * item.qty
+          count += (item.fields.weight?.value or 1) * item.qty
         else
           count += item.qty
 

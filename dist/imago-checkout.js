@@ -312,7 +312,7 @@ Calculation = (function() {
   };
 
   Calculation.prototype.calcShipping = function(rate) {
-    var count, defer, i, item, j, len, len1, range, ref, ref1, ref2, ref3, ref4, ref5, shipping, with_shippingcost;
+    var count, defer, i, item, j, len, len1, range, ref, ref1, ref2, ref3, ref4, ref5, ref6, shipping, with_shippingcost;
     defer = this.$q.defer();
     count = 0;
     with_shippingcost = [];
@@ -324,7 +324,7 @@ Calculation = (function() {
         with_shippingcost.push(item);
       } else if ((ref3 = item.fields.calculateShippingCosts) != null ? ref3.value : void 0) {
         if (rate.type === 'weight') {
-          count += (item.weight || 1) * item.qty;
+          count += (((ref4 = item.fields.weight) != null ? ref4.value : void 0) || 1) * item.qty;
         } else {
           count += item.qty;
         }
@@ -347,7 +347,7 @@ Calculation = (function() {
     }
     for (j = 0, len1 = with_shippingcost.length; j < len1; j++) {
       item = with_shippingcost[j];
-      shipping += (((ref4 = item.fields.overwriteShippingCosts) != null ? (ref5 = ref4.value) != null ? ref5[this.currency] : void 0 : void 0) || 0) * item.qty;
+      shipping += (((ref5 = item.fields.overwriteShippingCosts) != null ? (ref6 = ref5.value) != null ? ref6[this.currency] : void 0 : void 0) || 0) * item.qty;
     }
     defer.resolve({
       'shipping': shipping,
