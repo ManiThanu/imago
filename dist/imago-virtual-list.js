@@ -31,34 +31,29 @@ ImagoVirtualList = (function() {
         masterDiv.style.zIndex = -1;
         element.append(masterDiv);
         scope.init = function() {
-          if (!scope.imagovirtuallist.data) {
+          if (this.initRunning) {
             return;
           }
-          if (this.calculating) {
-            return;
-          }
-          this.calculating = true;
-          if (attrs.imagoVirtualListContainer) {
-            element[0].addEventListener('scroll', scope.onScrollContainer);
-          } else {
-            angular.element($window).on('scroll', scope.onScrollWindow);
-          }
-          scope.resetSize();
+          this.initRunning = true;
+          angular.element($window).on('scroll', scope.onScrollWindow);
           return $timeout((function(_this) {
             return function() {
               var cellsPerHeight;
-              self.height = element[0].clientHeight;
+              scope.resetSize();
               self.itemsPerRow = Math.floor(element[0].clientWidth / masterDiv.clientWidth);
-              cellsPerHeight = Math.round(self.height / masterDiv.clientHeight);
+              cellsPerHeight = Math.round($window.innerHeight / masterDiv.clientHeight);
               self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
               self.numberOfCells = 3 * self.cellsPerPage;
               self.canvasWidth = self.itemsPerRow * masterDiv.clientWidth;
               self.updateData();
-              return _this.calculating = false;
+              return _this.initRunning = false;
             };
-          })(this), 200);
+          })(this), 100);
         };
         self.updateData = function() {
+          if (!scope.imagovirtuallist.data) {
+            return;
+          }
           self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * masterDiv.clientHeight;
           scope.canvasStyle = {
             height: self.canvasHeight + "px",
@@ -68,7 +63,7 @@ ImagoVirtualList = (function() {
         };
         self.updateDisplayList = function() {
           var cellsToCreate, chunks, data, findIndex, firstCell, i, idx, l;
-          firstCell = Math.max(Math.round(self.scrollTop / masterDiv.clientHeight) - (Math.round(self.height / masterDiv.clientHeight)), 0);
+          firstCell = Math.max(Math.round(self.scrollTop / masterDiv.clientHeight) - (Math.round($window.innerHeight / masterDiv.clientHeight)), 0);
           cellsToCreate = Math.min(firstCell + self.numberOfCells, self.numberOfCells);
           data = firstCell * self.itemsPerRow;
           scope.visibleProvider = scope.imagovirtuallist.data.slice(data, data + cellsToCreate);
@@ -113,11 +108,6 @@ ImagoVirtualList = (function() {
             return $document.scrollTop(self.scrollTop, 0);
           });
         };
-        scope.onScrollContainer = function() {
-          self.scrollTop = element.prop('scrollTop');
-          self.updateDisplayList();
-          return scope.$digest();
-        };
         scope.onScrollWindow = function() {
           self.scrollTop = $window.scrollY;
           if ((self.canvasHeight - self.scrollTop) <= Number(scope.imagovirtuallist.offsetBottom)) {
@@ -130,11 +120,10 @@ ImagoVirtualList = (function() {
           scope.visibleProvider = [];
           scope.canvasStyle = {};
           self.cellsPerPage = 0;
-          self.numberOfCells = 0;
-          return self.height = 0;
+          return self.numberOfCells = 0;
         };
         scope.init();
-        scope.$watch('imagovirtuallist.data', function() {
+        scope.$watch('imagovirtuallist.data', function(value) {
           return self.updateData();
         });
         angular.element($window).on('resize', (function(_this) {

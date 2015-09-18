@@ -33,33 +33,28 @@ class ImagoVirtualList extends Directive
         element.append masterDiv
 
         scope.init = ->
-          return unless scope.imagovirtuallist.data
-          return if @calculating
-          @calculating = true
-          if attrs.imagoVirtualListContainer
-            element[0].addEventListener 'scroll', scope.onScrollContainer
-          else
-            angular.element($window).on 'scroll', scope.onScrollWindow
-
-          scope.resetSize()
+          return if @initRunning
+          @initRunning = true
+          angular.element($window).on 'scroll', scope.onScrollWindow
           $timeout =>
-            self.height = element[0].clientHeight
+            scope.resetSize()
             self.itemsPerRow = Math.floor(element[0].clientWidth / masterDiv.clientWidth)
-            cellsPerHeight = Math.round(self.height / masterDiv.clientHeight)
+            cellsPerHeight = Math.round($window.innerHeight / masterDiv.clientHeight)
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow
             self.numberOfCells = 3 * self.cellsPerPage
             self.canvasWidth = self.itemsPerRow * masterDiv.clientWidth
             self.updateData()
-            @calculating = false
-          , 200
+            @initRunning = false
+          , 100
 
         self.updateData = ->
+          return unless scope.imagovirtuallist.data
           self.canvasHeight = Math.ceil(scope.imagovirtuallist.data.length / self.itemsPerRow) * masterDiv.clientHeight
           scope.canvasStyle = height: "#{self.canvasHeight}px", width: "#{self.canvasWidth}px"
           self.updateDisplayList()
 
         self.updateDisplayList = ->
-          firstCell = Math.max(Math.round(self.scrollTop / masterDiv.clientHeight) - (Math.round(self.height / masterDiv.clientHeight)), 0)
+          firstCell = Math.max(Math.round(self.scrollTop / masterDiv.clientHeight) - (Math.round($window.innerHeight / masterDiv.clientHeight)), 0)
           cellsToCreate = Math.min(firstCell + self.numberOfCells, self.numberOfCells)
           data = firstCell * self.itemsPerRow
           scope.visibleProvider = scope.imagovirtuallist.data.slice(data, data + cellsToCreate)
@@ -77,6 +72,7 @@ class ImagoVirtualList extends Directive
                   return idx
 
             idx = findIndex()
+            # scope.visibleProvider[i].styles = 'transform': "translate3d(#{(masterDiv.clientWidth * idx.inside) + 'px'}, #{(firstCell + idx.chunk) * masterDiv.clientHeight + 'px'}, 0)"
             scope.visibleProvider[i].styles = 'transform': "translate(#{(masterDiv.clientWidth * idx.inside) + 'px'}, #{(firstCell + idx.chunk) * masterDiv.clientHeight + 'px'})"
             i++
           scope.scroll() if scope.imagovirtuallist.scroll
@@ -87,11 +83,6 @@ class ImagoVirtualList extends Directive
             self.scrollTop = angular.copy scope.imagovirtuallist.scroll
             scope.imagovirtuallist.scroll = 0
             $document.scrollTop(self.scrollTop, 0)
-
-        scope.onScrollContainer = ->
-          self.scrollTop = element.prop('scrollTop')
-          self.updateDisplayList()
-          scope.$digest()
 
         scope.onScrollWindow = ->
           self.scrollTop = $window.scrollY
@@ -105,11 +96,10 @@ class ImagoVirtualList extends Directive
           scope.canvasStyle     = {}
           self.cellsPerPage     = 0
           self.numberOfCells    = 0
-          self.height           = 0
 
         scope.init()
 
-        scope.$watch 'imagovirtuallist.data', ->
+        scope.$watch 'imagovirtuallist.data', (value) ->
           self.updateData()
 
         angular.element($window).on 'resize', =>
