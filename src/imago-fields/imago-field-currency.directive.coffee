@@ -37,11 +37,10 @@ class imagoFilterCurrency extends Directive
       link: (scope, elem, attrs, ctrl) ->
 
         ctrl.$formatters.unshift (value) ->
-          # console.log 'value', angular.copy(value)
-          value = (value / 100).toFixed(2)
-          # console.log 'value 2', angular.copy value
+          if angular.isDefined(value) and not _.isNull(value)
+            value = (value / 100).toFixed(2)
           if isNaN(value)
-            value = null
+            value = undefined
           return value
 
         ctrl.$parsers.unshift (viewValue) ->
@@ -56,6 +55,6 @@ class imagoFilterCurrency extends Directive
             plainNumber = plainNumber.toFixed(2)
             return plainNumber
           else
-            return '0.00'
+            return undefined
 
     }

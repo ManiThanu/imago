@@ -80,9 +80,11 @@ imagoFilterCurrency = (function() {
       require: 'ngModel',
       link: function(scope, elem, attrs, ctrl) {
         ctrl.$formatters.unshift(function(value) {
-          value = (value / 100).toFixed(2);
+          if (angular.isDefined(value) && !_.isNull(value)) {
+            value = (value / 100).toFixed(2);
+          }
           if (isNaN(value)) {
-            value = null;
+            value = void 0;
           }
           return value;
         });
@@ -94,7 +96,7 @@ imagoFilterCurrency = (function() {
             plainNumber = plainNumber.toFixed(2);
             return plainNumber;
           } else {
-            return '0.00';
+            return void 0;
           }
         });
       }
