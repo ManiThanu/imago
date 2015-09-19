@@ -6,6 +6,7 @@ div.imago-form
       input(
         type="text"
         name="name"
+        id="name"
         ng-model="contact.data.name"
         placeholder="Name"
         required
@@ -16,6 +17,7 @@ div.imago-form
       input(
         type="email"
         name="email"
+        id="email"
         ng-model="contact.data.email"
         placeholder="Email"
         required
@@ -25,6 +27,7 @@ div.imago-form
       label(for="message") Message
       textarea(
         name="message"
+        id="message"
         ng-model="contact.data.message"
         placeholder="Your message."
         required
@@ -34,6 +37,7 @@ div.imago-form
       input(
         type="checkbox"
         name="subscribe"
+        id="subscribe"
         ng-model="contact.data.subscribe"
         checked
         )
