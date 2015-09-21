@@ -1909,11 +1909,37 @@ var imagoWorker,
 imagoWorker = (function() {
   imagoWorker.prototype.store = [];
 
+  imagoWorker.prototype.notSupported = false;
+
+  imagoWorker.prototype.test = function() {
+    var blob, e, error, error1, scriptText, worker;
+    scriptText = 'this.onmessage=function(e){postMessage(e.data)}';
+    try {
+      blob = new Blob([scriptText], {
+        type: 'text/javascript'
+      });
+    } catch (error) {
+      e = error;
+      this.notSupported = true;
+    }
+    if (this.notSupported) {
+      return;
+    }
+    try {
+      worker = new Worker(URL.createObjectURL(blob));
+      return worker.terminate();
+    } catch (error1) {
+      e = error1;
+      return this.notSupported = true;
+    }
+  };
+
   function imagoWorker($q, $http) {
     this.$q = $q;
     this.$http = $http;
     this.work = bind(this.work, this);
     this.create = bind(this.create, this);
+    this.test();
   }
 
   imagoWorker.prototype.create = function(path, data, defer) {
@@ -1937,7 +1963,7 @@ imagoWorker = (function() {
     find = _.find(this.store, {
       'path': data.path
     });
-    if (typeof bowser !== "undefined" && bowser !== null ? bowser.msie : void 0) {
+    if (this.notSupported) {
       this.create(data.path, data, defer);
     } else if (find) {
       this.create(find.blob, data, defer);
