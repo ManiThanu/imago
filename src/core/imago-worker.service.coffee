@@ -15,8 +15,7 @@ class imagoWorker extends Service
       @supported = false
     return if @supported is false
     try
-      worker = new Worker(@windowURL.createObjectURL(blob))
-      worker.terminate()
+      @create @windowURL.createObjectURL(blob), 'imago'
     catch e
       @supported = false
 
@@ -24,7 +23,7 @@ class imagoWorker extends Service
     worker = new Worker(path)
 
     worker.addEventListener 'message', (e) =>
-      defer.resolve e.data
+      defer.resolve(e.data) if defer
       worker.terminate()
 
     worker.postMessage data

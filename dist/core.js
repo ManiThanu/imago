@@ -1921,7 +1921,7 @@ imagoWorker = (function() {
   }
 
   imagoWorker.prototype.test = function() {
-    var blob, e, error, error1, scriptText, worker;
+    var blob, e, error, error1, scriptText;
     scriptText = 'this.onmessage=function(e){postMessage(e.data)}';
     try {
       blob = new Blob([scriptText], {
@@ -1935,8 +1935,7 @@ imagoWorker = (function() {
       return;
     }
     try {
-      worker = new Worker(this.windowURL.createObjectURL(blob));
-      return worker.terminate();
+      return this.create(this.windowURL.createObjectURL(blob), 'imago');
     } catch (error1) {
       e = error1;
       return this.supported = false;
@@ -1948,7 +1947,9 @@ imagoWorker = (function() {
     worker = new Worker(path);
     worker.addEventListener('message', (function(_this) {
       return function(e) {
-        defer.resolve(e.data);
+        if (defer) {
+          defer.resolve(e.data);
+        }
         return worker.terminate();
       };
     })(this));
