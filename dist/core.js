@@ -1909,7 +1909,16 @@ var imagoWorker,
 imagoWorker = (function() {
   imagoWorker.prototype.store = [];
 
-  imagoWorker.prototype.notSupported = false;
+  imagoWorker.prototype.supported = true;
+
+  function imagoWorker($q, $http) {
+    this.$q = $q;
+    this.$http = $http;
+    this.work = bind(this.work, this);
+    this.create = bind(this.create, this);
+    this.windowURL = window.URL || window.webkitURL;
+    this.test();
+  }
 
   imagoWorker.prototype.test = function() {
     var blob, e, error, error1, scriptText, worker;
@@ -1920,27 +1929,19 @@ imagoWorker = (function() {
       });
     } catch (error) {
       e = error;
-      this.notSupported = true;
+      this.supported = false;
     }
-    if (this.notSupported) {
+    if (this.supported === false) {
       return;
     }
     try {
-      worker = new Worker(URL.createObjectURL(blob));
+      worker = new Worker(this.windowURL.createObjectURL(blob));
       return worker.terminate();
     } catch (error1) {
       e = error1;
-      return this.notSupported = true;
+      return this.supported = false;
     }
   };
-
-  function imagoWorker($q, $http) {
-    this.$q = $q;
-    this.$http = $http;
-    this.work = bind(this.work, this);
-    this.create = bind(this.create, this);
-    this.test();
-  }
 
   imagoWorker.prototype.create = function(path, data, defer) {
     var worker;
@@ -1955,7 +1956,7 @@ imagoWorker = (function() {
   };
 
   imagoWorker.prototype.work = function(data) {
-    var defer, find, windowURL;
+    var defer, find;
     defer = this.$q.defer();
     if (!(data && data.path)) {
       defer.reject('nodata or path');
@@ -1963,12 +1964,11 @@ imagoWorker = (function() {
     find = _.find(this.store, {
       'path': data.path
     });
-    if (this.notSupported) {
+    if (this.supported === false) {
       this.create(data.path, data, defer);
     } else if (find) {
       this.create(find.blob, data, defer);
     } else {
-      windowURL = window.URL || window.webkitURL;
       this.$http.get(data.path, {
         cache: true
       }).then((function(_this) {
@@ -1978,7 +1978,7 @@ imagoWorker = (function() {
           blob = new Blob([stringified], {
             type: 'application/javascript'
           });
-          blobURL = windowURL.createObjectURL(blob);
+          blobURL = _this.windowURL.createObjectURL(blob);
           _this.store.push({
             'path': data.path,
             'blob': blobURL
