@@ -502,7 +502,6 @@ imagoCart = (function() {
 
   imagoCart.prototype.checkout = function() {
     var decorated, url;
-    console.log('checkout', tenant);
     if (!tenant) {
       return;
     }

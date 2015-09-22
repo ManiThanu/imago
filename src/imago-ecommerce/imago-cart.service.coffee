@@ -170,7 +170,6 @@ class imagoCart extends Service
 
 
   checkout: ->
-    console.log 'checkout', tenant
     return unless tenant
 
     url = "https://#{tenant}.imago.io/account/checkout/#{@cart._id}"
