@@ -35,7 +35,6 @@ class ImagoVirtualList extends Directive
         scope.init = ->
           return if @initRunning
           @initRunning = true
-          angular.element($window).on 'scroll', scope.onScrollWindow
           $timeout =>
             scope.resetSize()
             self.itemsPerRow = Math.floor(element[0].clientWidth / masterDiv.clientWidth)
@@ -84,7 +83,7 @@ class ImagoVirtualList extends Directive
             scope.imagovirtuallist.scroll = 0
             $document.scrollTop(self.scrollTop, 0)
 
-        scope.onScrollWindow = ->
+        scope.onScroll = ->
           self.scrollTop = $window.scrollY
           if (self.canvasHeight - self.scrollTop) <= Number(scope.imagovirtuallist.offsetBottom)
             scope.imagovirtuallist.onBottom()
@@ -106,13 +105,15 @@ class ImagoVirtualList extends Directive
           if Math.floor(element[0].clientWidth / masterDiv.clientWidth) isnt self.itemsPerRow
             scope.init()
 
+        angular.element($window).on 'scroll', scope.onScroll
+
         watchers = []
 
         watchers.push $rootScope.$on 'imagovirtuallist:init', ->
           scope.init()
 
         scope.$on '$destroy', ->
-          angular.element($window).off 'scroll'
+          angular.element($window).off 'scroll', scope.onScroll
           for watcher in watchers
             watcher()
 

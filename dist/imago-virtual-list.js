@@ -35,7 +35,6 @@ ImagoVirtualList = (function() {
             return;
           }
           this.initRunning = true;
-          angular.element($window).on('scroll', scope.onScrollWindow);
           return $timeout((function(_this) {
             return function() {
               var cellsPerHeight;
@@ -108,7 +107,7 @@ ImagoVirtualList = (function() {
             return $document.scrollTop(self.scrollTop, 0);
           });
         };
-        scope.onScrollWindow = function() {
+        scope.onScroll = function() {
           self.scrollTop = $window.scrollY;
           if ((self.canvasHeight - self.scrollTop) <= Number(scope.imagovirtuallist.offsetBottom)) {
             scope.imagovirtuallist.onBottom();
@@ -133,13 +132,14 @@ ImagoVirtualList = (function() {
             }
           };
         })(this));
+        angular.element($window).on('scroll', scope.onScroll);
         watchers = [];
         watchers.push($rootScope.$on('imagovirtuallist:init', function() {
           return scope.init();
         }));
         return scope.$on('$destroy', function() {
           var j, len, results, watcher;
-          angular.element($window).off('scroll');
+          angular.element($window).off('scroll', scope.onScroll);
           results = [];
           for (j = 0, len = watchers.length; j < len; j++) {
             watcher = watchers[j];
