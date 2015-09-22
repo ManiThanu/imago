@@ -167,6 +167,17 @@ class imagoCart extends Service
       continue unless item.qty and item.price[@currency]
       @subtotal += item.qty * item.price[@currency]
 
+
+
   checkout: ->
+    console.log 'checkout', tenant
     return unless tenant
-    @$window.location.href = "https://#{tenant}.imago.io/account/checkout/#{@cart._id}"
+
+    url = "https://#{tenant}.imago.io/account/checkout/#{@cart._id}"
+
+    decorated = ''
+    ga (tracker) =>
+      linker = new (@$window.gaplugins.Linker)(tracker)
+      decorated = linker.decorate(url, true)
+
+    @$window.location.href = decorated or url
