@@ -501,10 +501,20 @@ imagoCart = (function() {
   };
 
   imagoCart.prototype.checkout = function() {
+    var decorated, url;
     if (!tenant) {
       return;
     }
-    return this.$window.location.href = "https://" + tenant + ".imago.io/account/checkout/" + this.cart._id;
+    url = "https://" + tenant + ".imago.io/account/checkout/" + this.cart._id;
+    decorated = '';
+    ga((function(_this) {
+      return function(tracker) {
+        var linker;
+        linker = new _this.$window.gaplugins.Linker(tracker);
+        return decorated = linker.decorate(url, true);
+      };
+    })(this));
+    return this.$window.location.href = decorated || url;
   };
 
   return imagoCart;
