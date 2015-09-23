@@ -10,7 +10,7 @@ describe "Unit: imagoModel", ->
 
   # Mock Application to allow us to inject our own dependencies
   beforeEach ->
-    module('imago.widgets.angular')
+    module('imago')
 
   beforeEach ->
     inject (_$rootScope_, _imagoModel_, _$httpBackend_) ->
