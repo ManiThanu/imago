@@ -35,8 +35,8 @@ class ImagoVirtualList extends Directive
         scope.init = ->
           return if @initRunning
           @initRunning = true
+          scope.visibleProvider = []
           $timeout =>
-            scope.resetSize()
             self.itemsPerRow = Math.floor(element[0].clientWidth / masterDiv.clientWidth)
             cellsPerHeight = Math.round($window.innerHeight / masterDiv.clientHeight)
             self.cellsPerPage = cellsPerHeight * self.itemsPerRow
@@ -90,12 +90,6 @@ class ImagoVirtualList extends Directive
             scope.imagovirtuallist.onBottom()
           self.updateDisplayList()
           scope.$digest()
-
-        scope.resetSize = ->
-          scope.visibleProvider = []
-          scope.canvasStyle     = {}
-          self.cellsPerPage     = 0
-          self.numberOfCells    = 0
 
         scope.init()
 

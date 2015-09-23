@@ -35,10 +35,10 @@ ImagoVirtualList = (function() {
             return;
           }
           this.initRunning = true;
+          scope.visibleProvider = [];
           return $timeout((function(_this) {
             return function() {
               var cellsPerHeight;
-              scope.resetSize();
               self.itemsPerRow = Math.floor(element[0].clientWidth / masterDiv.clientWidth);
               cellsPerHeight = Math.round($window.innerHeight / masterDiv.clientHeight);
               self.cellsPerPage = cellsPerHeight * self.itemsPerRow;
@@ -116,12 +116,6 @@ ImagoVirtualList = (function() {
           }
           self.updateDisplayList();
           return scope.$digest();
-        };
-        scope.resetSize = function() {
-          scope.visibleProvider = [];
-          scope.canvasStyle = {};
-          self.cellsPerPage = 0;
-          return self.numberOfCells = 0;
         };
         scope.init();
         scope.$watch('imagovirtuallist.data', function(value) {
